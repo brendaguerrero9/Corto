@@ -23,10 +23,10 @@ import modelo.Filtro;
 public class FiltroDao implements metodos<Filtro> {
     
     private static final String SQL_INSERT = "INSERT INTO alumnos (CodCarnet, nombre, apellidos,edad,universidad, estado) VALUES(?,?,?,?,?,?)";
-    private static final String SQL_UPDATE = "UPDATE alumnos SET nombre = ?, apellidos = ?, universidad = ?, edad = ? WHERE CodCarnet = ?";
-    private static final String SQL_DELETE = "DELETE FROM filtros_aceite WHERE codFiltro = ?";
-    private static final String SQL_READ = "SELECT * FROM filtros_aceite WHERE codFiltro = ?";
-    private static final String SQL_READALL = "SELECT * FROM filtros_aceite";
+    private static final String SQL_UPDATE = "UPDATE alumnos SET nombre = ?, apellidos = ?, universidad = ?, edad = ?, estado = ? WHERE CodCarnet = ?";
+    private static final String SQL_DELETE = "DELETE FROM alumnos WHERE codCarnet = ?";
+    private static final String SQL_READ = "SELECT * FROM alumnos WHERE codCarnet = ?";
+    private static final String SQL_READALL = "SELECT * FROM alumnos";
     private static final Conexion con = Conexion.conectar();
 
     @Override

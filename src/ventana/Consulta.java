@@ -7,12 +7,15 @@ package ventana;
 
 import dao.FiltroDao;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -63,6 +66,7 @@ public class Consulta extends JFrame {
         container.add(nombre);
         container.add(apellidos);
         container.add(universidad);
+        container.add(edad);
         container.add(si);
         container.add(no);
         container.add(buscar);
@@ -122,7 +126,7 @@ public class Consulta extends JFrame {
         nombre.setBounds(150, 60, ANCHOC, ALTOC);
         apellidos.setBounds(380, 60, ANCHOC, ALTOC);
         universidad.setBounds(100, 100, ANCHOC, ALTOC);
-        edad.setBounds(300,60, ANCHOC, ALTOC);
+        edad.setBounds(300,100, ANCHOC, ALTOC);
         si.setBounds(140, 140, 50, ALTOC);
         no.setBounds(210, 140, 50, ALTOC);
 
@@ -157,6 +161,7 @@ public class Consulta extends JFrame {
         tm.addColumn("Carnet");
         tm.addColumn("Nombres");
         tm.addColumn("Apellidos");
+        //tm.addColumn("Edad");
         tm.addColumn("Universidad");
         tm.addColumn("Estado");
 
@@ -170,6 +175,93 @@ public class Consulta extends JFrame {
         resultados.setModel(tm);
 
     }
+    
+    private void eventos() {
+        insertar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd = new FiltroDao();
+                Filtro f = new Filtro(carnet.getText(), universidad.getSelectedItem().toString(),apellidos.getText(), true);
+
+                if (no.isSelected()) {
+                    f.setEstado(false);
+                }
+
+                if (fd.create(f)) {
+                    JOptionPane.showMessageDialog(null, "Filtro registrado con éxito");
+                    //limpiarCampos();
+                    llenarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema con la creación de este filtro.");
+                }
+            }
+        });
+
+        actualizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd = new FiltroDao();
+                Filtro f = new Filtro(carnet.getText(), universidad.getSelectedItem().toString(), true);
+
+                if (no.isSelected()) {
+                    f.setEstado(false);
+                }
+
+                if (fd.update(f)) {
+                    JOptionPane.showMessageDialog(null, "Filtro modificado con éxito");
+                    //limpiarCampos();
+                    llenarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema al momento de creación de este filtro.");
+                }
+            }
+        });
+
+        eliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd = new FiltroDao();
+                Filtro f = new Filtro(carnet.getText(), universidad.getSelectedItem().toString(), Integer.parseInt(estado.getText()), true);
+                if (fd.delete(carnet.getText())) {
+                    JOptionPane.showMessageDialog(null, "Filtro eliminado con éxito");
+                    //limpiarCampos();
+                    llenarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema al momento de eliminar este filtro.");
+                }
+            }
+        });
+
+        buscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd = new FiltroDao();
+                Filtro f = fd.read(carnet.getText());
+                if (f == null) {
+                    JOptionPane.showMessageDialog(null, "El Filtro buscado no ha sido encontrado");
+                } else {
+
+                    carnet.setText(f.getCarnet());
+                    universidad.setSelectedItem(f.getUniversidad());
+                    //edad.setText(Integer.toString(f.getEdad();
+
+                    if (f.getEstado()) {
+                        si.setSelected(true);
+                    } else {
+                        no.setSelected(true);
+                    }
+                }
+            }
+        });
+
+        limpiar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //limpiarCampos();
+            }
+        });
+    }
+    
 
     
     
